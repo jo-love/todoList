@@ -1,31 +1,59 @@
 import React from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import { categoryState, toDoSelector } from '../atoms';
+import { useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
+import styled from 'styled-components';
+import { toDoSelector, toDoState } from '../atoms';
 import CreateToDo from './CreateToDo';
 import ToDo from './ToDo';
+import ToDoSelect from './ToDoSelect';
+
+const Container = styled.div`
+  display: flex;
+  width: 100%;
+  align-items: center;
+`;
+
+const ToDoListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 60%;
+  height: 70vh;
+`;
+
+const TodoList = styled.ul`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  height: 90%;
+  border: 2px solid ${(props) => props.theme.textColor};
+  margin-top: 10px;
+`;
 
 function ToDoList() {
   const toDos = useRecoilValue(toDoSelector);
-  const [category, setCategory] = useRecoilState(categoryState);
+  const toDosValue = useRecoilValue(toDoState);
 
-  const onInput = (e: React.FormEvent<HTMLSelectElement>) => {
-    // options의 value를 categories 타입이 아니라 단지 string으로 보기때문에 
-    setCategory(e.currentTarget.value as any);
-  };
+  //서버통신get 하는 것처럼 만들기
+  useEffect(() => {
+    localStorage.setItem('TODO', JSON.stringify(toDosValue));
+  });
   return (
-    <div>
+    <>
       <h1>to Dos</h1>
       <hr />
-      <select value={category} onInput={onInput}>
-        <option value="TO_DO">To Do</option>
-        <option value="DOING">Doing</option>
-        <option value="DONE">Done</option>
-      </select>
-      <CreateToDo />
-      {toDos?.map((toDo) => (
-        <ToDo key={toDo.id} {...toDo} />
-      ))}
-    </div>
+      <Container>
+        <ToDoListContainer>
+          <ToDoSelect />
+          <CreateToDo />
+          <TodoList>
+            {toDos?.map((toDo) => (
+              <ToDo key={toDo.id} {...toDo} />
+            ))}
+          </TodoList>
+        </ToDoListContainer>
+      </Container>
+    </>
   );
 }
 
