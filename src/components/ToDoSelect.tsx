@@ -7,7 +7,7 @@ const ToDoSelect = () => {
     const {
       currentTarget: { value },
     } = e;
-    // options의 value를 categories 타입이 아니라 단지 string으로 보기때문에
+    // options의 value를 categories 타입이 아니라 단지 string으로 보기 때문에
     setCategory(value as Categories);
   };
   return (

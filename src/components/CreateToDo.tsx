@@ -11,10 +11,9 @@ function CreateToDo() {
   const category = useRecoilValue(categoryState);
   const { register, handleSubmit, setValue } = useForm<IForm>();
   const onValid = ({ toDo }: IForm) => {
-    setToDos((prev) => [
-      { text: toDo, id: Date.now(), status: category },
-      ...prev,
-    ]);
+    setToDos((prev) => {
+      return [...prev, { text: toDo, id: Date.now(), status: category }];
+    });
     setValue('toDo', '');
   };
   return (
@@ -24,6 +23,7 @@ function CreateToDo() {
           required: 'Please write a To Do',
         })}
         placeholder="Write a to do"
+        autoComplete="off"
       />
       <button>Add</button>
     </form>
